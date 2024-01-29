@@ -1,5 +1,7 @@
 var altura = 0
 var largura = 0
+var vidas = 1
+var tempo = 10
 
 // Busca o valor da altura e largura da página sempre que a mesma é movida ou redimencionada
 function ajustarTamanhoPalcoJogo() {
@@ -9,8 +11,44 @@ function ajustarTamanhoPalcoJogo() {
 
 ajustarTamanhoPalcoJogo()
 
+// Cria a logica do cronometro
+
+document.getElementById('tempo').innerHTML = tempo
+
+var cronometro = setInterval(function(){
+    tempo --
+
+    // Verifica se o tempo acabou
+    if (tempo < 0) {
+
+        // Limpa da memória os intervalos.
+        clearInterval(cronometro)
+        clearInterval(criarMosca)
+    } else {
+        document.getElementById('tempo').innerHTML = tempo
+    }
+}, 1000)
+
 // Cria a posicao randomica do mosquito.
 function posicaoRandomica() {
+
+    // Remover o mosquito anterior, caso exista.
+    if (document.getElementById('mosquito')) {
+
+        // Verifica se o usuário perde o jogo
+        if (vidas > 3) {
+            window.location.href = 'fim_de_jogo.html'
+        } else {
+
+            // Caso exista um elemento, ele elimina o mosquito e altera os pontos de vida.
+            document.getElementById('mosquito').remove()
+
+            // Muda a vida
+            document.getElementById('vida'+vidas).src = 'imagens/coracao_vazio.png'
+            vidas++
+        }
+    }
+
     // Criar um valor que pode ir de zero até o valor máximo de altura ou largura.
     var posicaoX = Math.floor(Math.random() * largura) - 90    
     var posicaoY = Math.floor(Math.random() * altura) - 90
@@ -26,6 +64,10 @@ function posicaoRandomica() {
     mosca.style.left = posicaoX + 'px'
     mosca.style.top = posicaoY + 'px'
     mosca.style.position = 'absolute'
+    mosca.id = 'mosquito'
+    mosca.onclick = function() {
+        this.remove()
+    }
 
     // Trata da seleção do tamanho do mosquito com a função tamanhoAleatorio()
     var tamanho = tamanhoAleatorio()
@@ -63,4 +105,6 @@ function ladoAleatorio() {
     }
 }
 
-posicaoRandomica()
+var criarMosca = setInterval(function() {
+    posicaoRandomica()
+}, 2000)
