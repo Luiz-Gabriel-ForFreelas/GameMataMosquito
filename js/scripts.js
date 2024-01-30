@@ -1,7 +1,20 @@
 var altura = 0
 var largura = 0
 var vidas = 1
-var tempo = 10
+var tempo = 30
+var criaMosquitoTempo = 1500
+
+// Recebe o parametro informado pelo usuário (dificuldade)
+var nivel = window.location.search
+nivel = nivel.replace('?', '')
+
+if (nivel === 'normal') {
+    criaMosquitoTempo = 1500
+} else if (nivel === 'dificil') {
+    criaMosquitoTempo = 1000
+} else {
+    criaMosquitoTempo = 750
+}
 
 // Busca o valor da altura e largura da página sempre que a mesma é movida ou redimencionada
 function ajustarTamanhoPalcoJogo() {
@@ -24,6 +37,9 @@ var cronometro = setInterval(function(){
         // Limpa da memória os intervalos.
         clearInterval(cronometro)
         clearInterval(criarMosca)
+
+        // Envia o jogador para a página de venceu
+        window.location.href = 'vitoria.html'
     } else {
         document.getElementById('tempo').innerHTML = tempo
     }
@@ -107,4 +123,4 @@ function ladoAleatorio() {
 
 var criarMosca = setInterval(function() {
     posicaoRandomica()
-}, 2000)
+}, criaMosquitoTempo)
